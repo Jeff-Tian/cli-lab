@@ -2,15 +2,16 @@
 
 ## 验证步骤 / Verification Steps
 
-### 方法 1: 使用 Homebrew 审计工具 / Method 1: Using Homebrew Audit Tools
+### 方法 1: 本地测试安装 / Method 1: Local Installation Test
 
 ```bash
 # 1. 克隆此分支到本地 / Clone this branch locally
 git clone -b copilot/add-homebrew-formula https://github.com/Jeff-Tian/cli-lab.git
 cd cli-lab
 
-# 2. 检查 Formula 语法 / Check formula syntax
-brew audit --strict --online Formula/dotnet-core-uninstall.rb
+# 2. 检查 Formula 语法 / Check formula syntax (Ruby)
+ruby -c Formula/dotnet-core-uninstall.rb
+# 预期输出 / Expected output: Syntax OK
 
 # 3. 尝试安装（使用本地 Formula）/ Try installing (using local formula)
 brew install --build-from-source ./Formula/dotnet-core-uninstall.rb
@@ -26,7 +27,7 @@ dotnet-core-uninstall list
 brew uninstall dotnet-core-uninstall
 ```
 
-### 方法 2: 直接从 GitHub Tap 安装 / Method 2: Install Directly from GitHub Tap
+### 方法 2: 直接从 GitHub Tap 安装（推荐）/ Method 2: Install from GitHub Tap (Recommended)
 
 ```bash
 # 1. 添加 tap（如果之前没有添加）/ Add tap (if not already added)
@@ -47,6 +48,9 @@ dotnet-core-uninstall list
 
 # 6. 测试 dry-run（不会真正删除）/ Test dry-run (won't actually delete)
 dotnet-core-uninstall dry-run --all --sdk
+
+# 7. 运行内置测试 / Run built-in test
+brew test dotnet-core-uninstall
 ```
 
 ### 方法 3: 快速语法检查 / Method 3: Quick Syntax Check
@@ -54,8 +58,12 @@ dotnet-core-uninstall dry-run --all --sdk
 ```bash
 # 只检查 Ruby 语法 / Check Ruby syntax only
 ruby -c Formula/dotnet-core-uninstall.rb
-
 # 预期输出 / Expected output: Syntax OK
+
+# 或者使用 Homebrew 样式检查（在 tap 后）/ Or use Homebrew style check (after tapping)
+brew tap Jeff-Tian/cli-lab https://github.com/Jeff-Tian/cli-lab
+brew style dotnet-core-uninstall
+brew audit --new dotnet-core-uninstall
 ```
 
 ## 预期结果 / Expected Results
