@@ -1,5 +1,7 @@
 # Homebrew 安装指南 / Homebrew Installation Guide
 
+> **Note**: This Homebrew formula is hosted in the Jeff-Tian/cli-lab repository but installs the official binaries from dotnet/cli-lab releases.
+
 ## 中文说明
 
 ### 安装

@@ -4,6 +4,9 @@ class DotnetCoreUninstall < Formula
   version "1.7.656206"
   license "MIT"
 
+  # Note: This formula taps from Jeff-Tian/cli-lab which hosts the Homebrew formula.
+  # The binaries are from the official dotnet/cli-lab releases.
+
   on_macos do
     if Hardware::CPU.arm?
       url "https://github.com/dotnet/cli-lab/releases/download/1.7.656206/dotnet-core-uninstall-osx-arm64.tar.gz"
