@@ -2,39 +2,46 @@
 
 ## ⚠️ 重要提示 / Important Note
 
-此 Formula 当前在 `copilot/add-homebrew-formula` 分支中，尚未合并到 main 分支。因此需要使用本地文件进行测试。
+此 Formula 当前在 `copilot/add-homebrew-formula` 分支中，尚未合并到 main 分支。由于新版 Homebrew 要求 formula 必须在 tap 中，需要创建临时本地 tap 进行测试。
 
-This formula is currently in the `copilot/add-homebrew-formula` branch and hasn't been merged to main yet. Therefore, you need to test using local files.
+This formula is currently in the `copilot/add-homebrew-formula` branch and hasn't been merged to main yet. Since newer Homebrew versions require formulas to be in a tap, you need to create a temporary local tap for testing.
 
 ## 验证步骤 / Verification Steps
 
-### 方法 1: 本地测试安装（推荐用于 PR 验证）/ Method 1: Local Installation Test (Recommended for PR verification)
+### 方法 1: 创建临时本地 Tap 测试（推荐）/ Method 1: Create Temporary Local Tap (Recommended)
 
 ```bash
 # 1. 克隆此分支到本地 / Clone this branch locally
 git clone -b copilot/add-homebrew-formula https://github.com/Jeff-Tian/cli-lab.git
 cd cli-lab
 
-# 2. 检查 Formula 语法 / Check formula syntax (Ruby)
+# 2. 检查 Formula 语法 / Check formula syntax
 ruby -c Formula/dotnet-core-uninstall.rb
 # 预期输出 / Expected output: Syntax OK
 
-# 3. 尝试安装（使用本地 Formula 文件）/ Try installing (using local formula file)
-brew install --formula ./Formula/dotnet-core-uninstall.rb
+# 3. 创建本地 tap / Create local tap
+brew tap-new jeff-tian/local
 
-# 4. 验证安装 / Verify installation
+# 4. 复制 formula 到 tap / Copy formula to tap
+cp Formula/dotnet-core-uninstall.rb "$(brew --repository)/Library/Taps/jeff-tian/homebrew-local/Formula/"
+
+# 5. 安装 / Install
+brew install jeff-tian/local/dotnet-core-uninstall
+
+# 6. 验证安装 / Verify installation
 dotnet-core-uninstall --version
 # 预期输出 / Expected output: 1.7.656206
 
 dotnet-core-uninstall -h
 # 应该显示帮助信息 / Should display help information
 
-# 5. 测试基本功能 / Test basic functionality
+# 7. 测试基本功能 / Test basic functionality
 dotnet-core-uninstall list
 # 会列出已安装的 .NET SDK/Runtime（如果有）/ Will list installed .NET SDKs/Runtimes (if any)
 
-# 6. 清理 / Cleanup
+# 8. 清理 / Cleanup
 brew uninstall dotnet-core-uninstall
+brew untap jeff-tian/local
 ```
 
 ### 方法 2: 合并后的安装方式（仅供参考）/ Method 2: Post-merge Installation (For reference only)
@@ -68,20 +75,26 @@ cat Formula/dotnet-core-uninstall.rb
 
 ## 常见问题 / Common Issues
 
+### ❌ 问题：brew install 提示 "Homebrew requires formulae to be in a tap" / Issue: brew install says "Homebrew requires formulae to be in a tap"
+
+**原因 / Reason:** 新版 Homebrew 不再支持直接从本地文件安装 formula。
+
+**解决方法 / Solution:** 使用方法 1 创建临时本地 tap 进行测试。
+
 ### ❌ 问题：brew tap 后找不到 formula / Issue: Formula not found after brew tap
 
 **原因 / Reason:** Formula 目前只在 PR 分支中，还未合并到 main 分支。Homebrew tap 默认使用 main 分支。
 
-**解决方法 / Solution:** 使用方法 1 直接从本地文件安装测试。
+**解决方法 / Solution:** 使用方法 1 创建临时本地 tap 并复制 formula 文件。
 
 ### ❌ 问题：brew audit 或 brew style 找不到 formula / Issue: brew audit or brew style can't find formula
 
-**原因 / Reason:** 这些命令需要 formula 在已 tap 的仓库的 main 分支中。
+**原因 / Reason:** 这些命令需要 formula 在已 tap 的仓库中。
 
 **解决方法 / Solution:** 
 1. 使用 `ruby -c` 检查语法
-2. 使用 `brew install --formula ./Formula/dotnet-core-uninstall.rb` 直接测试安装
-3. 等待 PR 合并后，再使用 `brew audit` 和 `brew style`
+2. 使用方法 1 创建本地 tap 后，可以运行 `brew audit jeff-tian/local/dotnet-core-uninstall`
+3. 等待 PR 合并后，再使用标准的 `brew audit` 和 `brew style`
 
 ## 预期结果 / Expected Results
 
