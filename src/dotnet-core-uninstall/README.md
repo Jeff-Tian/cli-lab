@@ -37,6 +37,21 @@ To release the tool, you need to do the following:
 
 ## On macOS:
 
+### Using Homebrew (Recommended):
+
+```shell
+# Tap this repository
+brew tap Jeff-Tian/cli-lab https://github.com/Jeff-Tian/cli-lab
+
+# Install dotnet-core-uninstall
+brew install dotnet-core-uninstall
+
+# Verify installation and show help
+dotnet-core-uninstall -h
+```
+
+### Manual Installation:
+
 Download the tar.gz file below.
 Open terminal and change working directory to the directory with dotnet-core-uninstall.tar.gz.
 Use the following commands to install the tool and show help:
